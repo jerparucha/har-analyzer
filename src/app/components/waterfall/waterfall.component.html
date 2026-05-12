@@ -1,0 +1,58 @@
+<div class="waterfall-wrapper">
+
+  <!-- Legend -->
+  <div class="legend">
+    @for (entry of legendItems; track entry.label) {
+      <span class="legend-item">
+        <span class="legend-dot" [style.background]="entry.color"></span>
+        {{ entry.label }}
+      </span>
+    }
+  </div>
+
+  <!-- Chart -->
+  <div class="chart-scroll">
+    <!-- Time axis -->
+    <div class="time-axis" [style.padding-left.px]="labelWidth">
+      @for (tick of tickMarks(); track tick.pct) {
+        <span class="tick" [style.left.%]="tick.pct">{{ tick.label }}</span>
+      }
+    </div>
+
+    <!-- Rows -->
+    <div class="rows-container">
+      @for (row of rows(); track row.index) {
+        <div class="wf-row" [style.height.px]="rowHeight()">
+
+          <!-- Label -->
+          <div class="row-label" [style.width.px]="labelWidth" [title]="row.url">
+            <span class="row-index">{{ row.index }}</span>
+            <span class="status-dot {{ statusClass(row.status) }}"></span>
+            <span class="method-tag method-{{ row.method.toLowerCase() }}">{{ row.method }}</span>
+            <span class="row-url">{{ row.shortUrl }}</span>
+          </div>
+
+          <!-- Bar area -->
+          <div class="bar-area">
+            @for (phase of row.phases; track phase.label) {
+              <div
+                class="phase-bar"
+                [style.left.%]="phase.offsetPct"
+                [style.width.%]="phase.widthPct"
+                [style.background]="phase.color"
+                [style.height.px]="rowHeight() - 10"
+                [matTooltip]="phaseTooltip(phase)"
+                matTooltipShowDelay="200">
+              </div>
+            }
+          </div>
+
+        </div>
+      }
+    </div>
+  </div>
+
+  @if (!rows().length) {
+    <p class="empty">No requests to display.</p>
+  }
+</div>

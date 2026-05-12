@@ -9,6 +9,7 @@ import { UploadComponent } from './components/upload/upload.component';
 import { SummaryComponent } from './components/summary/summary.component';
 import { RequestTableComponent } from './components/request-table/request-table.component';
 import { RequestInspectorComponent } from './components/request-inspector/request-inspector.component';
+import { WaterfallComponent } from './components/waterfall/waterfall.component';
 import { HarParserService } from './services/har-parser.service';
 import { HarEntry } from './models/har.model';
 
@@ -26,6 +27,7 @@ import { HarEntry } from './models/har.model';
     SummaryComponent,
     RequestTableComponent,
     RequestInspectorComponent,
+    WaterfallComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss',
