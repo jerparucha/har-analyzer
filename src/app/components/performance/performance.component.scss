@@ -1,0 +1,237 @@
+.perf-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 16px 24px;
+}
+
+.perf-section {
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid #e0e0e0;
+  overflow: hidden;
+}
+
+.section-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid #f0f0f0;
+  background: #fafafa;
+  flex-wrap: wrap;
+}
+
+.section-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+  margin-top: 2px;
+  flex-shrink: 0;
+
+  &.slow { color: #ff9800; }
+  &.dup  { color: #9c27b0; }
+}
+
+.section-title {
+  margin: 0 0 2px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #212121;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-sub {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #9e9e9e;
+}
+
+.count-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #e3f2fd;
+  color: #1565c0;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 1px 8px;
+  min-width: 24px;
+
+  &.warn { background: #fff3e0; color: #e65100; }
+}
+
+.threshold-control {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+
+.threshold-label {
+  font-size: 0.85rem;
+  color: #555;
+  white-space: nowrap;
+}
+
+.threshold-slider { width: 160px; }
+
+// Request list (slow)
+.request-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.request-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 20px;
+  border-bottom: 1px solid #f5f5f5;
+  font-size: 0.84rem;
+
+  &:last-child { border-bottom: none; }
+  &:hover { background: #fffde7; }
+}
+
+.req-index {
+  color: #bdbdbd;
+  font-size: 0.75rem;
+  min-width: 32px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.req-url-wrap {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.req-domain {
+  font-size: 0.72rem;
+  color: #9e9e9e;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.req-path {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.8rem;
+  color: #1a237e;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: default;
+}
+
+.req-time {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #555;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.slow-time { color: #e65100; font-weight: 700; }
+
+// Empty state
+.empty-state {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 24px 20px;
+  color: #4caf50;
+  font-size: 0.9rem;
+
+  mat-icon { font-size: 20px; width: 20px; height: 20px; }
+}
+
+// Duplicates accordion
+.dup-accordion {
+  border-radius: 0 !important;
+
+  mat-expansion-panel {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    border-bottom: 1px solid #f0f0f0;
+
+    &:last-child { border-bottom: none; }
+  }
+}
+
+.dup-panel-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+}
+
+.dup-panel-desc {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.dup-total-time {
+  font-size: 0.8rem;
+  color: #9e9e9e;
+  white-space: nowrap;
+}
+
+.dup-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 4px 0 8px;
+}
+
+.dup-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 12px;
+  font-size: 0.82rem;
+  background: #fafafa;
+  border-radius: 4px;
+}
+
+// Badges
+.method-badge {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+
+  &.method-get    { background: #4caf50; }
+  &.method-post   { background: #2196f3; }
+  &.method-put    { background: #ff9800; }
+  &.method-patch  { background: #9c27b0; }
+  &.method-delete { background: #f44336; }
+  &.method-options, &.method-head { background: #9e9e9e; }
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  flex-shrink: 0;
+
+  &.status-2xx { background: #e8f5e9; color: #2e7d32; }
+  &.status-3xx { background: #e3f2fd; color: #1565c0; }
+  &.status-4xx { background: #fff3e0; color: #e65100; }
+  &.status-5xx { background: #fce4ec; color: #b71c1c; }
+}
