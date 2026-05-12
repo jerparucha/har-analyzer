@@ -1,59 +1,97 @@
-# HarAnalyzer
+# HAR File Analyzer
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.10.
+A web-based tool for inspecting and analyzing HTTP Archive (HAR) files. Load a HAR file and instantly explore network activity through multiple views — waterfall charts, performance metrics, security analysis, and more.
 
-## Development server
+Built with **Angular 21** and **Angular Material**.
 
-To start a local development server, run:
+---
+
+## Features
+
+### Summary
+Stat cards showing total requests, transfer size, total time, failed requests, and page count. Two donut charts break down requests and transfer size by content type (HTML, JS, CSS, Images, Fonts, XHR, Other).
+
+### Waterfall
+Timeline chart of all requests with phase-level color coding (Blocked, DNS, Connect, SSL, Send, Wait, Receive). Each row shows the domain and path with a full-URL tooltip. Sticky time axis with tick marks.
+
+### Performance
+Configurable slow-request threshold with a list of requests that exceed it. Duplicate request detection grouped by method + URL (query strings stripped).
+
+### Security
+Automated checks across all responses:
+- Missing security headers (CSP, HSTS, X-Frame-Options, etc.)
+- Insecure cookies (missing Secure / HttpOnly / SameSite flags)
+- Mixed content (HTTP resources on HTTPS pages)
+- Sensitive data in URLs (tokens, passwords, session IDs)
+- Deprecated headers
+
+Findings are severity-ranked (High / Medium / Low / Info) with recommendations.
+
+### Requests
+Filterable, sortable, paginated table of all requests. Filter by keyword, HTTP method, status code range, and content type. Click any row to open the inspector panel.
+
+### Request Inspector
+Side panel showing full details for the selected request:
+- Overview (URL, method, status, timing)
+- Request & response headers
+- Request & response cookies
+- Request body (POST data)
+- Response body (pretty-printed for JSON)
+- Timing breakdown
+
+---
+
+## Getting Started
+
+### Prerequisites
+- Node.js 18+
+- npm
+
+### Install & run
 
 ```bash
-ng serve
+npm install
+npx ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Open `http://localhost:4200` in your browser.
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Build
 
 ```bash
-ng generate component component-name
+npx ng build
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Output goes to `dist/har-analyzer/`.
 
-```bash
-ng generate --help
-```
+---
 
-## Building
+## How to get a HAR file
 
-To build the project run:
+**Chrome / Edge:**
+1. Open DevTools → Network tab
+2. Reproduce the requests you want to capture
+3. Right-click anywhere in the request list → **Save all as HAR with content**
 
-```bash
-ng build
-```
+**Firefox:**
+1. Open DevTools → Network tab
+2. Click the gear icon → **Save All as HAR**
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+---
 
-## Running unit tests
+## Tech Stack
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+| Layer | Technology |
+|---|---|
+| Framework | Angular 21 (standalone components, signals) |
+| UI | Angular Material v21 (M3 theme) |
+| Charts | Pure SVG (no external charting library) |
+| Styling | SCSS |
+| Build | Angular CLI / Vite |
+| Tests | Vitest |
 
-```bash
-ng test
-```
+---
 
-## Running end-to-end tests
+## License
 
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+MIT
