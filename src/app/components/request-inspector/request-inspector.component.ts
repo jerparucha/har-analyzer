@@ -20,10 +20,16 @@ import { HarEntry, HarHeader, HarCookie } from '../../models/har.model';
 export class RequestInspectorComponent {
   @Input() set entry(val: HarEntry | null) {
     this._entry.set(val);
+    this.showFullResponse.set(false);
+    this.showFullRequest.set(false);
   }
   @Output() closed = new EventEmitter<void>();
 
   _entry = signal<HarEntry | null>(null);
+
+  private readonly MAX_BODY_CHARS = 50_000;
+  showFullResponse = signal(false);
+  showFullRequest  = signal(false);
 
   overview = computed(() => {
     const e = this._entry();
@@ -69,7 +75,7 @@ export class RequestInspectorComponent {
   reqCookies  = computed(() => this._entry()?.request.cookies ?? []);
   resCookies  = computed(() => this._entry()?.response.cookies ?? []);
 
-  responseBody = computed(() => {
+  private rawResponseBody = computed(() => {
     const text = this._entry()?.response.content.text;
     if (!text) return null;
     const mime = this._entry()?.response.content.mimeType ?? '';
@@ -79,7 +85,7 @@ export class RequestInspectorComponent {
     return text;
   });
 
-  requestBody = computed(() => {
+  private rawRequestBody = computed(() => {
     const pd = this._entry()?.request.postData;
     if (!pd) return null;
     if (pd.text) {
@@ -92,6 +98,34 @@ export class RequestInspectorComponent {
       return pd.params.map(p => `${p.name}=${p.value ?? ''}`).join('\n');
     }
     return null;
+  });
+
+  responseBody = computed(() => {
+    const body = this.rawResponseBody();
+    if (!body) return null;
+    if (!this.showFullResponse() && body.length > this.MAX_BODY_CHARS) {
+      return body.slice(0, this.MAX_BODY_CHARS);
+    }
+    return body;
+  });
+
+  requestBody = computed(() => {
+    const body = this.rawRequestBody();
+    if (!body) return null;
+    if (!this.showFullRequest() && body.length > this.MAX_BODY_CHARS) {
+      return body.slice(0, this.MAX_BODY_CHARS);
+    }
+    return body;
+  });
+
+  responseBodyTruncated = computed(() => {
+    const body = this.rawResponseBody();
+    return body !== null && body.length > this.MAX_BODY_CHARS;
+  });
+
+  requestBodyTruncated = computed(() => {
+    const body = this.rawRequestBody();
+    return body !== null && body.length > this.MAX_BODY_CHARS;
   });
 
   statusClass(status: number): string {
