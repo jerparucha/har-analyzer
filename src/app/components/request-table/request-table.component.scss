@@ -29,8 +29,21 @@
 
   table {
     width: 100%;
-    min-width: 800px;
+    min-width: 700px;
+    table-layout: fixed;
   }
+}
+
+// Column widths — fixed for small columns, URL stretches to fill the rest
+::ng-deep {
+  .mat-column-index   { width: 52px;  }
+  .mat-column-method  { width: 90px;  }
+  .mat-column-status  { width: 80px;  }
+  .mat-column-type    { width: 90px;  }
+  .mat-column-domain  { width: 180px; }
+  .mat-column-url     { width: auto;  } // takes remaining space
+  .mat-column-size    { width: 90px; text-align: right; }
+  .mat-column-time    { width: 90px; text-align: right; }
 }
 
 // Sticky header
@@ -92,7 +105,6 @@ th.mat-header-cell {
 .domain-cell {
   font-size: 0.82rem;
   color: #555;
-  max-width: 160px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -100,7 +112,6 @@ th.mat-header-cell {
 
 .url-cell {
   display: block;
-  max-width: 320px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
