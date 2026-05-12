@@ -11,6 +11,7 @@ import { RequestTableComponent } from './components/request-table/request-table.
 import { RequestInspectorComponent } from './components/request-inspector/request-inspector.component';
 import { WaterfallComponent } from './components/waterfall/waterfall.component';
 import { PerformanceComponent } from './components/performance/performance.component';
+import { SecurityComponent } from './components/security/security.component';
 import { HarParserService } from './services/har-parser.service';
 import { HarEntry } from './models/har.model';
 
@@ -30,6 +31,7 @@ import { HarEntry } from './models/har.model';
     RequestInspectorComponent,
     WaterfallComponent,
     PerformanceComponent,
+    SecurityComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss',

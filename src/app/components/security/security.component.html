@@ -1,0 +1,92 @@
+<div class="security-wrapper">
+
+  <!-- Score bar -->
+  <div class="score-bar">
+    @if (summary.high > 0) {
+      <div class="score-chip high">
+        <mat-icon>error</mat-icon>
+        {{ summary.high }} High
+      </div>
+    }
+    @if (summary.medium > 0) {
+      <div class="score-chip medium">
+        <mat-icon>warning</mat-icon>
+        {{ summary.medium }} Medium
+      </div>
+    }
+    @if (summary.low > 0) {
+      <div class="score-chip low">
+        <mat-icon>info</mat-icon>
+        {{ summary.low }} Low
+      </div>
+    }
+    @if (summary.info > 0) {
+      <div class="score-chip info">
+        <mat-icon>tips_and_updates</mat-icon>
+        {{ summary.info }} Info
+      </div>
+    }
+    @if (summary.total === 0) {
+      <div class="score-chip pass">
+        <mat-icon>verified_user</mat-icon>
+        No issues found
+      </div>
+    }
+    <span class="score-total">{{ summary.total }} finding{{ summary.total !== 1 ? 's' : '' }} total</span>
+  </div>
+
+  <!-- Findings -->
+  @if (findings.length === 0) {
+    <div class="empty-state">
+      <mat-icon>verified_user</mat-icon>
+      <div>
+        <strong>No security issues detected</strong>
+        <p>All checked headers, cookies, and URLs passed the security audit.</p>
+      </div>
+    </div>
+  } @else {
+    <mat-accordion multi class="findings-accordion">
+      @for (finding of findings; track finding.id) {
+        <mat-expansion-panel class="finding-panel">
+          <mat-expansion-panel-header>
+            <mat-panel-title class="finding-title">
+              <mat-icon class="sev-icon sev-{{ finding.severity }}">{{ severityIcon(finding.severity) }}</mat-icon>
+              <span class="finding-name">{{ finding.title }}</span>
+              <span class="sev-badge sev-{{ finding.severity }}">{{ severityLabel(finding.severity) }}</span>
+            </mat-panel-title>
+            <mat-panel-description class="finding-meta">
+              <span class="category-chip">{{ finding.category }}</span>
+              <span class="affected-count">{{ finding.affectedEntries.length }} request{{ finding.affectedEntries.length !== 1 ? 's' : '' }}</span>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <div class="finding-body">
+            <p class="finding-desc">{{ finding.description }}</p>
+            <div class="recommendation">
+              <mat-icon>lightbulb</mat-icon>
+              <span>{{ finding.recommendation }}</span>
+            </div>
+
+            <h4 class="affected-label">Affected Requests</h4>
+            <div class="affected-list">
+              @for (entry of finding.affectedEntries; track entry.index) {
+                <div class="affected-row">
+                  <span class="req-index">#{{ entry.index }}</span>
+                  <div class="req-url-wrap">
+                    <span class="req-domain">{{ entry.domain }}</span>
+                    <span class="req-path" [matTooltip]="entry.url" matTooltipShowDelay="400">{{ entry.shortUrl }}</span>
+                  </div>
+                  @if (entry.detail) {
+                    <span class="entry-detail">{{ entry.detail }}</span>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+
+        </mat-expansion-panel>
+      }
+    </mat-accordion>
+  }
+
+</div>
