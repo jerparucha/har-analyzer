@@ -5,6 +5,22 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { HarParserService } from '../../services/har-parser.service';
 
+interface BreakdownItem {
+  label: string;
+  color: string;
+  count: number;
+  size: number;
+}
+
+interface ChartSegment {
+  label: string;
+  color: string;
+  pct: number;
+  dash: number;
+  offset: number;
+  formattedValue: string;
+}
+
 @Component({
   selector: 'app-summary',
   standalone: true,
@@ -14,6 +30,8 @@ import { HarParserService } from '../../services/har-parser.service';
 })
 export class SummaryComponent {
   private parser = inject(HarParserService);
+
+  readonly circ = 2 * Math.PI * 60;
 
   summary = this.parser.summary;
   fileName = this.parser.fileName;
@@ -30,20 +48,69 @@ export class SummaryComponent {
     ];
   });
 
-  breakdown = computed(() => {
+  private baseBreakdown = computed<BreakdownItem[]>(() => {
     const s = this.summary();
     if (!s) return [];
     const b = s.breakdown;
-    return [
-      { label: 'HTML', ...b.html, color: '#f44336' },
-      { label: 'JavaScript', ...b.javascript, color: '#ff9800' },
-      { label: 'CSS', ...b.css, color: '#2196f3' },
-      { label: 'Images', ...b.images, color: '#4caf50' },
-      { label: 'Fonts', ...b.fonts, color: '#9c27b0' },
-      { label: 'XHR/Fetch', ...b.xhr, color: '#00bcd4' },
-      { label: 'Other', ...b.other, color: '#9e9e9e' },
-    ].filter(b => b.count > 0);
+    return ([
+      { label: 'HTML',       color: '#f44336', ...b.html },
+      { label: 'JavaScript', color: '#ff9800', ...b.javascript },
+      { label: 'CSS',        color: '#2196f3', ...b.css },
+      { label: 'Images',     color: '#4caf50', ...b.images },
+      { label: 'Fonts',      color: '#9c27b0', ...b.fonts },
+      { label: 'XHR/Fetch',  color: '#00bcd4', ...b.xhr },
+      { label: 'Other',      color: '#9e9e9e', ...b.other },
+    ] as BreakdownItem[]).filter(item => item.count > 0);
   });
+
+  breakdown = computed(() => {
+    const items = this.baseBreakdown();
+    const totalCount = items.reduce((s, i) => s + i.count, 0);
+    const totalSize  = items.reduce((s, i) => s + i.size,  0);
+    return items.map(item => ({
+      ...item,
+      countPct: totalCount ? (item.count / totalCount) * 100 : 0,
+      sizePct:  totalSize  ? (item.size  / totalSize)  * 100 : 0,
+    }));
+  });
+
+  chartByCount = computed<ChartSegment[]>(() => {
+    const items = this.baseBreakdown();
+    const total = items.reduce((s, i) => s + i.count, 0);
+    return this.toSegments(items, total, i => i.count, v => `${v} req`);
+  });
+
+  chartBySize = computed<ChartSegment[]>(() => {
+    const items = this.baseBreakdown();
+    const total = items.reduce((s, i) => s + i.size, 0);
+    return this.toSegments(items, total, i => i.size, v => this.formatBytes(v));
+  });
+
+  totalCountLabel = computed(() => {
+    return this.baseBreakdown().reduce((s, i) => s + i.count, 0).toString();
+  });
+
+  totalSizeLabel = computed(() => {
+    return this.formatBytes(this.baseBreakdown().reduce((s, i) => s + i.size, 0));
+  });
+
+  private toSegments(
+    items: BreakdownItem[],
+    total: number,
+    valFn: (i: BreakdownItem) => number,
+    fmtFn: (v: number) => string,
+  ): ChartSegment[] {
+    if (!total) return [];
+    let cum = 0;
+    return items.map(item => {
+      const v    = valFn(item);
+      const pct  = v / total;
+      const dash = pct * this.circ;
+      const offset = -(cum * this.circ);
+      cum += pct;
+      return { label: item.label, color: item.color, pct, dash, offset, formattedValue: fmtFn(v) };
+    });
+  }
 
   formatBytes(bytes: number): string {
     if (bytes <= 0) return '0 B';
@@ -55,5 +122,9 @@ export class SummaryComponent {
   formatTime(ms: number): string {
     if (ms < 1000) return `${Math.round(ms)} ms`;
     return `${(ms / 1000).toFixed(2)} s`;
+  }
+
+  formatPct(pct: number): string {
+    return `${Math.round(pct * 100)}%`;
   }
 }
