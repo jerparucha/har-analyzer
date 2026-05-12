@@ -1,0 +1,17 @@
+.app-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  gap: 8px;
+
+  .toolbar-icon { font-size: 24px; }
+  .toolbar-title { font-size: 1.1rem; font-weight: 500; }
+  .spacer { flex: 1; }
+}
+
+.app-main {
+  min-height: calc(100vh - 64px);
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}

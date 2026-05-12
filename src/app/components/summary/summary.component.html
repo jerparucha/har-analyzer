@@ -1,0 +1,36 @@
+@if (summary()) {
+  <div class="summary-wrapper">
+    <div class="file-header">
+      <mat-icon>description</mat-icon>
+      <span class="file-name">{{ fileName() }}</span>
+    </div>
+
+    <div class="stats-grid">
+      @for (stat of stats(); track stat.label) {
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <mat-icon [style.color]="stat.color">{{ stat.icon }}</mat-icon>
+            <div class="stat-value">{{ stat.value }}</div>
+            <div class="stat-label">{{ stat.label }}</div>
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+
+    <div class="breakdown-section">
+      <h3 class="section-title">By Content Type</h3>
+      <div class="breakdown-grid">
+        @for (item of breakdown(); track item.label) {
+          <div class="breakdown-item">
+            <div class="breakdown-bar-wrap">
+              <div class="breakdown-dot" [style.background]="item.color"></div>
+              <span class="breakdown-label">{{ item.label }}</span>
+            </div>
+            <span class="breakdown-count">{{ item.count }} req</span>
+            <span class="breakdown-size">{{ formatBytes(item.size) }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+}

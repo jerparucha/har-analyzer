@@ -1,0 +1,18 @@
+<mat-toolbar color="primary" class="app-toolbar">
+  <mat-icon class="toolbar-icon">analytics</mat-icon>
+  <span class="toolbar-title">HAR File Analyzer</span>
+  <span class="spacer"></span>
+  @if (hasFile()) {
+    <button mat-icon-button matTooltip="Load a new file" (click)="reset()">
+      <mat-icon>refresh</mat-icon>
+    </button>
+  }
+</mat-toolbar>
+
+<main class="app-main">
+  @if (!hasFile()) {
+    <app-upload />
+  } @else {
+    <app-summary />
+  }
+</main>
