@@ -4,8 +4,10 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatTabsModule } from '@angular/material/tabs';
 import { UploadComponent } from './components/upload/upload.component';
 import { SummaryComponent } from './components/summary/summary.component';
+import { RequestTableComponent } from './components/request-table/request-table.component';
 import { HarParserService } from './services/har-parser.service';
 
 @Component({
@@ -17,8 +19,10 @@ import { HarParserService } from './services/har-parser.service';
     MatIconModule,
     MatButtonModule,
     MatTooltipModule,
+    MatTabsModule,
     UploadComponent,
     SummaryComponent,
+    RequestTableComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss',
