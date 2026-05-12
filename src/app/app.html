@@ -18,7 +18,18 @@
         <app-summary />
       </mat-tab>
       <mat-tab label="Requests">
-        <app-request-table />
+        <div class="requests-layout" [class.has-inspector]="selectedEntry">
+          <div class="table-pane">
+            <app-request-table (entrySelected)="selectedEntry = $event" />
+          </div>
+          @if (selectedEntry) {
+            <div class="inspector-pane">
+              <app-request-inspector
+                [entry]="selectedEntry"
+                (closed)="selectedEntry = null" />
+            </div>
+          }
+        </div>
       </mat-tab>
     </mat-tab-group>
   }
