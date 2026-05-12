@@ -1,6 +1,9 @@
 import { Injectable, signal } from '@angular/core';
 import { HarFile, HarEntry, HarSummary, ContentBreakdown, TypeStats } from '../models/har.model';
 
+const MAX_FILE_SIZE_MB = 50;
+const MAX_ENTRIES = 5000;
+
 @Injectable({ providedIn: 'root' })
 export class HarParserService {
   readonly harFile = signal<HarFile | null>(null);
@@ -12,9 +15,15 @@ export class HarParserService {
   async loadFile(file: File): Promise<void> {
     this.error.set('');
     try {
+      if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+        throw new Error(`File is too large (${(file.size / 1024 / 1024).toFixed(1)} MB). Maximum allowed size is ${MAX_FILE_SIZE_MB} MB.`);
+      }
       const text = await file.text();
       const parsed = JSON.parse(text) as HarFile;
       this.validate(parsed);
+      if (parsed.log.entries.length > MAX_ENTRIES) {
+        throw new Error(`HAR file contains ${parsed.log.entries.length.toLocaleString()} requests. Maximum allowed is ${MAX_ENTRIES.toLocaleString()}.`);
+      }
       this.harFile.set(parsed);
       this.fileName.set(file.name);
       const entries = parsed.log.entries ?? [];
