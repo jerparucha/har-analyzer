@@ -1,0 +1,94 @@
+<div class="perf-wrapper">
+
+  <!-- Slow Requests -->
+  <section class="perf-section">
+    <div class="section-header">
+      <mat-icon class="section-icon slow">timer</mat-icon>
+      <div>
+        <h2 class="section-title">Slow Requests
+          <span class="count-badge">{{ slowRequests.length }}</span>
+        </h2>
+        <p class="section-sub">Requests exceeding the threshold below</p>
+      </div>
+      <div class="threshold-control">
+        <span class="threshold-label">Threshold: <strong>{{ thresholdLabel(threshold) }}</strong></span>
+        <mat-slider min="100" max="10000" step="100" [discrete]="true" class="threshold-slider">
+          <input matSliderThumb [(ngModel)]="threshold" />
+        </mat-slider>
+      </div>
+    </div>
+
+    @if (slowRequests.length === 0) {
+      <div class="empty-state">
+        <mat-icon>check_circle</mat-icon>
+        <span>No requests exceed {{ thresholdLabel(threshold) }}</span>
+      </div>
+    } @else {
+      <div class="request-list">
+        @for (req of slowRequests; track req.index) {
+          <div class="request-row">
+            <span class="req-index">#{{ req.index }}</span>
+            <span class="method-badge method-{{ req.method.toLowerCase() }}">{{ req.method }}</span>
+            <span class="status-badge {{ statusClass(req.status) }}">{{ req.status }}</span>
+            <div class="req-url-wrap">
+              <span class="req-domain">{{ req.domain }}</span>
+              <span class="req-path" [matTooltip]="req.url" matTooltipShowDelay="400">{{ req.shortUrl }}</span>
+            </div>
+            <span class="req-time slow-time">{{ formatTime(req.timeMs) }}</span>
+          </div>
+        }
+      </div>
+    }
+  </section>
+
+  <!-- Duplicate Requests -->
+  <section class="perf-section">
+    <div class="section-header">
+      <mat-icon class="section-icon dup">content_copy</mat-icon>
+      <div>
+        <h2 class="section-title">Duplicate Requests
+          <span class="count-badge">{{ duplicateGroups.length }}</span>
+        </h2>
+        <p class="section-sub">Same method + URL (ignoring query string) called more than once</p>
+      </div>
+    </div>
+
+    @if (duplicateGroups.length === 0) {
+      <div class="empty-state">
+        <mat-icon>check_circle</mat-icon>
+        <span>No duplicate requests found</span>
+      </div>
+    } @else {
+      <mat-accordion class="dup-accordion">
+        @for (group of duplicateGroups; track group.key) {
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title class="dup-panel-title">
+                <span class="method-badge method-{{ group.method.toLowerCase() }}">{{ group.method }}</span>
+                <div class="req-url-wrap">
+                  <span class="req-domain">{{ group.domain }}</span>
+                  <span class="req-path" [matTooltip]="group.url" matTooltipShowDelay="400">{{ group.shortUrl }}</span>
+                </div>
+              </mat-panel-title>
+              <mat-panel-description class="dup-panel-desc">
+                <span class="count-badge warn">{{ group.count }}x</span>
+                <span class="dup-total-time">{{ formatTime(group.totalMs) }} total</span>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <div class="dup-detail">
+              @for (req of group.requests; track req.index) {
+                <div class="dup-row">
+                  <span class="req-index">#{{ req.index }}</span>
+                  <span class="status-badge {{ statusClass(req.status) }}">{{ req.status }}</span>
+                  <span class="req-time">{{ formatTime(req.timeMs) }}</span>
+                </div>
+              }
+            </div>
+          </mat-expansion-panel>
+        }
+      </mat-accordion>
+    }
+  </section>
+
+</div>
