@@ -13,6 +13,13 @@
   @if (!hasFile()) {
     <app-upload />
   } @else {
-    <app-summary />
+    <mat-tab-group animationDuration="150ms" class="main-tabs">
+      <mat-tab label="Summary">
+        <app-summary />
+      </mat-tab>
+      <mat-tab label="Requests">
+        <app-request-table />
+      </mat-tab>
+    </mat-tab-group>
   }
 </main>

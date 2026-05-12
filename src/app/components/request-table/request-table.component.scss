@@ -1,0 +1,123 @@
+.table-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 24px;
+}
+
+.filters-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+
+  .search-field { flex: 1; min-width: 220px; }
+  .filter-field { width: 150px; }
+  .clear-btn { height: 56px; white-space: nowrap; }
+}
+
+.result-count {
+  font-size: 0.82rem;
+  color: #757575;
+  padding-left: 2px;
+}
+
+.table-container {
+  overflow-x: auto;
+  border-radius: 8px;
+  background: #fff;
+
+  table {
+    width: 100%;
+    min-width: 800px;
+  }
+}
+
+// Sticky header
+th.mat-header-cell {
+  background: #fafafa;
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: #555;
+  white-space: nowrap;
+}
+
+.data-row:hover { background: #f3f4ff; cursor: pointer; }
+
+// Method badges
+.method-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  color: #fff;
+
+  &.method-get    { background: #4caf50; }
+  &.method-post   { background: #2196f3; }
+  &.method-put    { background: #ff9800; }
+  &.method-patch  { background: #9c27b0; }
+  &.method-delete { background: #f44336; }
+  &.method-options, &.method-head { background: #9e9e9e; }
+}
+
+// Status badges
+.status-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: default;
+
+  &.status-2xx { background: #e8f5e9; color: #2e7d32; }
+  &.status-3xx { background: #e3f2fd; color: #1565c0; }
+  &.status-4xx { background: #fff3e0; color: #e65100; }
+  &.status-5xx { background: #fce4ec; color: #b71c1c; }
+}
+
+// Type chip
+.type-chip {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 0.73rem;
+  background: #ede7f6;
+  color: #4527a0;
+  white-space: nowrap;
+}
+
+// Cells
+.domain-cell {
+  font-size: 0.82rem;
+  color: #555;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.url-cell {
+  display: block;
+  max-width: 320px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.85rem;
+  font-family: 'Roboto Mono', monospace;
+  color: #1a237e;
+  cursor: default;
+}
+
+.num-cell {
+  text-align: right;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.no-data {
+  text-align: center;
+  padding: 32px;
+  color: #9e9e9e;
+}

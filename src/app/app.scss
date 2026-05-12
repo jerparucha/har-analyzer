@@ -11,7 +11,13 @@
 
 .app-main {
   min-height: calc(100vh - 64px);
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 24px 16px;
+  padding: 16px;
+}
+
+.main-tabs {
+  background: transparent;
+
+  ::ng-deep .mat-mdc-tab-body-content { overflow: visible; }
 }

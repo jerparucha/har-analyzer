@@ -1,0 +1,131 @@
+<div class="table-wrapper">
+
+  <!-- Filters toolbar -->
+  <div class="filters-bar">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search URL or domain</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput [(ngModel)]="searchQuery" (ngModelChange)="applyFilters()" placeholder="e.g. api/users" />
+      @if (searchQuery) {
+        <button matSuffix mat-icon-button (click)="searchQuery=''; applyFilters()">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Method</mat-label>
+      <mat-select multiple [(ngModel)]="selectedMethods" (ngModelChange)="applyFilters()">
+        @for (m of availableMethods(); track m) {
+          <mat-option [value]="m">{{ m }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Status</mat-label>
+      <mat-select multiple [(ngModel)]="selectedStatuses" (ngModelChange)="applyFilters()">
+        @for (s of statusGroups; track s.value) {
+          <mat-option [value]="s.value">{{ s.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Type</mat-label>
+      <mat-select multiple [(ngModel)]="selectedTypes" (ngModelChange)="applyFilters()">
+        @for (t of availableTypes(); track t) {
+          <mat-option [value]="t">{{ t }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    @if (activeFilterCount() > 0) {
+      <button mat-stroked-button color="warn" (click)="clearFilters()" class="clear-btn">
+        <mat-icon>filter_alt_off</mat-icon>
+        Clear ({{ activeFilterCount() }})
+      </button>
+    }
+  </div>
+
+  <div class="result-count">
+    {{ dataSource.filteredData.length }} of {{ dataSource.data.length }} requests
+  </div>
+
+  <!-- Table -->
+  <div class="mat-elevation-z1 table-container">
+    <table mat-table [dataSource]="dataSource" matSort>
+
+      <!-- # -->
+      <ng-container matColumnDef="index">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>#</th>
+        <td mat-cell *matCellDef="let row">{{ row.index }}</td>
+      </ng-container>
+
+      <!-- Method -->
+      <ng-container matColumnDef="method">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Method</th>
+        <td mat-cell *matCellDef="let row">
+          <span class="method-badge method-{{ row.method.toLowerCase() }}">{{ row.method }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Status -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+        <td mat-cell *matCellDef="let row">
+          <span class="status-badge {{ statusClass(row.status) }}" [matTooltip]="row.statusText">
+            {{ row.status }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Type -->
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
+        <td mat-cell *matCellDef="let row">
+          <span class="type-chip">{{ row.type }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Domain -->
+      <ng-container matColumnDef="domain">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Domain</th>
+        <td mat-cell *matCellDef="let row" class="domain-cell">{{ row.domain }}</td>
+      </ng-container>
+
+      <!-- URL -->
+      <ng-container matColumnDef="url">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>URL</th>
+        <td mat-cell *matCellDef="let row">
+          <span class="url-cell" [matTooltip]="row.url" matTooltipShowDelay="600">
+            {{ shortUrl(row.url) }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Size -->
+      <ng-container matColumnDef="size">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Size</th>
+        <td mat-cell *matCellDef="let row" class="num-cell">{{ formatBytes(row.size) }}</td>
+      </ng-container>
+
+      <!-- Time -->
+      <ng-container matColumnDef="time">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Time</th>
+        <td mat-cell *matCellDef="let row" class="num-cell">{{ formatTime(row.time) }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="data-row"></tr>
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell no-data" [attr.colspan]="displayedColumns.length">
+          No requests match the current filters.
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <mat-paginator [pageSizeOptions]="[25, 50, 100]" pageSize="25" showFirstLastButtons />
+</div>
