@@ -5,7 +5,7 @@
     <mat-form-field appearance="outline" class="search-field">
       <mat-label>Search URL or domain</mat-label>
       <mat-icon matPrefix>search</mat-icon>
-      <input matInput [(ngModel)]="searchQuery" (ngModelChange)="applyFilters()" placeholder="e.g. api/users" />
+      <input matInput [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()" placeholder="e.g. api/users" />
       @if (searchQuery) {
         <button matSuffix mat-icon-button (click)="searchQuery=''; applyFilters()">
           <mat-icon>close</mat-icon>

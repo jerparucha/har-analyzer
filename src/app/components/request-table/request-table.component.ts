@@ -79,6 +79,13 @@ export class RequestTableComponent implements OnInit {
     (this.searchQuery.trim() ? 1 : 0)
   );
 
+  private searchDebounce: ReturnType<typeof setTimeout> | null = null;
+
+  onSearchChange() {
+    if (this.searchDebounce) clearTimeout(this.searchDebounce);
+    this.searchDebounce = setTimeout(() => this.applyFilters(), 300);
+  }
+
   ngOnInit() {
     this.allEntries = this.parser.entries();
     const rows = this.allEntries.map((entry, i) => this.toRow(entry, i));
