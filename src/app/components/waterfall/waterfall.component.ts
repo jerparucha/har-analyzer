@@ -48,8 +48,8 @@ const PHASE_COLORS: Record<string, string> = {
 export class WaterfallComponent {
   private parser = inject(HarParserService);
 
-  rowHeight = signal(28);
-  labelWidth = 280;
+  rowHeight = signal(44);
+  labelWidth = 340;
 
   legendItems = Object.entries(PHASE_COLORS).map(([key, color]) => ({
     label: key.charAt(0).toUpperCase() + key.slice(1),

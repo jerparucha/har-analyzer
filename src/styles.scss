@@ -12,6 +12,14 @@ html {
   @include mat.all-component-themes($theme);
 }
 
+// Wide tooltip for full URLs in waterfall
+.url-tooltip {
+  max-width: 600px !important;
+  word-break: break-all;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.75rem !important;
+}
+
 *, *::before, *::after { box-sizing: border-box; }
 
 html, body {

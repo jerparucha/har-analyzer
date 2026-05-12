@@ -25,11 +25,15 @@
         <div class="wf-row" [style.height.px]="rowHeight()">
 
           <!-- Label -->
-          <div class="row-label" [style.width.px]="labelWidth" [title]="row.url">
+          <div class="row-label" [style.width.px]="labelWidth"
+               [matTooltip]="row.url" matTooltipShowDelay="300" matTooltipClass="url-tooltip">
             <span class="row-index">{{ row.index }}</span>
             <span class="status-dot {{ statusClass(row.status) }}"></span>
             <span class="method-tag method-{{ row.method.toLowerCase() }}">{{ row.method }}</span>
-            <span class="row-url">{{ row.shortUrl }}</span>
+            <span class="row-url-wrap">
+              <span class="row-domain">{{ row.domain }}</span>
+              <span class="row-url">{{ row.shortUrl }}</span>
+            </span>
           </div>
 
           <!-- Bar area -->
