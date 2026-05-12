@@ -18,6 +18,29 @@
 
 .main-tabs {
   background: transparent;
-
   ::ng-deep .mat-mdc-tab-body-content { overflow: visible; }
+}
+
+.requests-layout {
+  display: flex;
+  gap: 0;
+  min-height: calc(100vh - 130px);
+
+  .table-pane {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .inspector-pane {
+    width: 420px;
+    flex-shrink: 0;
+    border-left: 1px solid #e0e0e0;
+    border-radius: 0 8px 8px 0;
+    overflow: hidden;
+    background: #fff;
+    height: calc(100vh - 130px);
+    position: sticky;
+    top: 80px;
+  }
 }

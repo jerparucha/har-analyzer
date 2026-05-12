@@ -1,0 +1,161 @@
+@if (_entry()) {
+<div class="inspector-panel">
+
+  <!-- Header -->
+  <div class="inspector-header">
+    <div class="header-meta">
+      <span class="method-badge method-{{ overview()!.method.toLowerCase() }}">{{ overview()!.method }}</span>
+      <span class="status-badge {{ statusClass(overview()!.status) }}">{{ overview()!.status }} {{ overview()!.statusText }}</span>
+    </div>
+    <button mat-icon-button class="close-btn" matTooltip="Close" (click)="closed.emit()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="url-bar" [title]="overview()!.url">{{ overview()!.url }}</div>
+
+  <!-- Tabs -->
+  <mat-tab-group animationDuration="100ms" class="inspector-tabs">
+
+    <!-- Overview -->
+    <mat-tab label="Overview">
+      <div class="tab-content">
+        <table class="kv-table">
+          <tr><td class="kv-key">URL</td><td class="kv-val url-val">{{ overview()!.url }}</td></tr>
+          <tr><td class="kv-key">Domain</td><td class="kv-val">{{ overview()!.domain }}</td></tr>
+          <tr><td class="kv-key">Status</td><td class="kv-val"><span class="status-badge {{ statusClass(overview()!.status) }}">{{ overview()!.status }} {{ overview()!.statusText }}</span></td></tr>
+          <tr><td class="kv-key">Method</td><td class="kv-val">{{ overview()!.method }}</td></tr>
+          <tr><td class="kv-key">Protocol</td><td class="kv-val">{{ overview()!.httpVersion }}</td></tr>
+          <tr><td class="kv-key">MIME Type</td><td class="kv-val">{{ overview()!.mimeType }}</td></tr>
+          <tr><td class="kv-key">Content Size</td><td class="kv-val">{{ formatBytes(overview()!.size) }}</td></tr>
+          <tr><td class="kv-key">Transfer Size</td><td class="kv-val">{{ formatBytes(overview()!.transferSize) }}</td></tr>
+          <tr><td class="kv-key">Total Time</td><td class="kv-val">{{ formatTime(overview()!.time) }}</td></tr>
+          <tr><td class="kv-key">Server IP</td><td class="kv-val">{{ overview()!.serverIp }}</td></tr>
+          <tr><td class="kv-key">Started At</td><td class="kv-val">{{ overview()!.startedAt }}</td></tr>
+        </table>
+
+        @if (queryParams().length) {
+          <h4 class="section-label">Query Parameters</h4>
+          <table class="kv-table">
+            @for (p of queryParams(); track p.name) {
+              <tr>
+                <td class="kv-key">{{ p.name }}</td>
+                <td class="kv-val">{{ p.value }}</td>
+              </tr>
+            }
+          </table>
+        }
+      </div>
+    </mat-tab>
+
+    <!-- Headers -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        Headers
+        <span class="tab-count">{{ reqHeaders().length + resHeaders().length }}</span>
+      </ng-template>
+      <div class="tab-content">
+        <h4 class="section-label">Request Headers</h4>
+        <table class="kv-table">
+          @for (h of reqHeaders(); track h.name; let i = $index) {
+            <tr [class.row-alt]="i % 2 === 1">
+              <td class="kv-key">{{ h.name }}</td>
+              <td class="kv-val">{{ h.value }}</td>
+            </tr>
+          }
+        </table>
+
+        <h4 class="section-label">Response Headers</h4>
+        <table class="kv-table">
+          @for (h of resHeaders(); track h.name; let i = $index) {
+            <tr [class.row-alt]="i % 2 === 1">
+              <td class="kv-key">{{ h.name }}</td>
+              <td class="kv-val">{{ h.value }}</td>
+            </tr>
+          }
+        </table>
+      </div>
+    </mat-tab>
+
+    <!-- Body -->
+    <mat-tab label="Body">
+      <div class="tab-content">
+        @if (requestBody()) {
+          <h4 class="section-label">Request Body</h4>
+          <pre class="body-pre">{{ requestBody() }}</pre>
+        }
+        @if (responseBody()) {
+          <h4 class="section-label">Response Body</h4>
+          <pre class="body-pre">{{ responseBody() }}</pre>
+        }
+        @if (!requestBody() && !responseBody()) {
+          <p class="empty-msg">No body content available.</p>
+        }
+      </div>
+    </mat-tab>
+
+    <!-- Cookies -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        Cookies
+        <span class="tab-count">{{ reqCookies().length + resCookies().length }}</span>
+      </ng-template>
+      <div class="tab-content">
+        @if (reqCookies().length) {
+          <h4 class="section-label">Request Cookies</h4>
+          <table class="kv-table">
+            @for (c of reqCookies(); track c.name; let i = $index) {
+              <tr [class.row-alt]="i % 2 === 1">
+                <td class="kv-key">{{ c.name }}</td>
+                <td class="kv-val">{{ c.value }}</td>
+              </tr>
+            }
+          </table>
+        }
+        @if (resCookies().length) {
+          <h4 class="section-label">Response Cookies</h4>
+          <table class="kv-table">
+            @for (c of resCookies(); track c.name; let i = $index) {
+              <tr [class.row-alt]="i % 2 === 1">
+                <td class="kv-key">{{ c.name }}</td>
+                <td class="kv-val cookie-flags">
+                  {{ c.value }}
+                  @if (c.httpOnly) { <span class="flag">HttpOnly</span> }
+                  @if (c.secure) { <span class="flag">Secure</span> }
+                  @if (c.sameSite) { <span class="flag">{{ c.sameSite }}</span> }
+                </td>
+              </tr>
+            }
+          </table>
+        }
+        @if (!reqCookies().length && !resCookies().length) {
+          <p class="empty-msg">No cookies found.</p>
+        }
+      </div>
+    </mat-tab>
+
+    <!-- Timing -->
+    <mat-tab label="Timing">
+      <div class="tab-content">
+        <div class="timing-list">
+          @for (phase of timings(); track phase.label) {
+            <div class="timing-row">
+              <span class="timing-label">{{ phase.label }}</span>
+              <div class="timing-bar-wrap">
+                <div class="timing-bar" [style.width.%]="phase.pct" [style.background]="phase.color"></div>
+              </div>
+              <span class="timing-value">{{ formatTime(phase.value) }}</span>
+            </div>
+          }
+          <div class="timing-row timing-total">
+            <span class="timing-label">Total</span>
+            <div class="timing-bar-wrap"></div>
+            <span class="timing-value">{{ formatTime(_entry()!.time) }}</span>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+
+  </mat-tab-group>
+</div>
+}

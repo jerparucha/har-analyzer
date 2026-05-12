@@ -8,7 +8,9 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { UploadComponent } from './components/upload/upload.component';
 import { SummaryComponent } from './components/summary/summary.component';
 import { RequestTableComponent } from './components/request-table/request-table.component';
+import { RequestInspectorComponent } from './components/request-inspector/request-inspector.component';
 import { HarParserService } from './services/har-parser.service';
+import { HarEntry } from './models/har.model';
 
 @Component({
   selector: 'app-root',
@@ -23,6 +25,7 @@ import { HarParserService } from './services/har-parser.service';
     UploadComponent,
     SummaryComponent,
     RequestTableComponent,
+    RequestInspectorComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss',
@@ -30,8 +33,10 @@ import { HarParserService } from './services/har-parser.service';
 export class App {
   private parser = inject(HarParserService);
   hasFile = this.parser.harFile;
+  selectedEntry: HarEntry | null = null;
 
   reset() {
+    this.selectedEntry = null;
     this.parser.reset();
   }
 }

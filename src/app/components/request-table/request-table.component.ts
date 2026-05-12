@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ViewChild, computed, signal } from '@angular/core';
+import { Component, inject, OnInit, ViewChild, Output, EventEmitter, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
@@ -14,6 +14,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatBadgeModule } from '@angular/material/badge';
 import { HarParserService } from '../../services/har-parser.service';
 import { HarEntry } from '../../models/har.model';
+
 
 interface TableRow {
   index: number;
@@ -46,10 +47,15 @@ export class RequestTableComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  @Output() entrySelected = new EventEmitter<HarEntry>();
+
+  selectedIndex: number | null = null;
 
   displayedColumns = ['index', 'method', 'status', 'type', 'domain', 'url', 'size', 'time'];
 
   dataSource = new MatTableDataSource<TableRow>([]);
+
+  private allEntries: HarEntry[] = [];
 
   searchQuery = '';
   selectedMethods: string[] = [];
@@ -74,7 +80,8 @@ export class RequestTableComponent implements OnInit {
   );
 
   ngOnInit() {
-    const rows = this.parser.entries().map((entry, i) => this.toRow(entry, i));
+    this.allEntries = this.parser.entries();
+    const rows = this.allEntries.map((entry, i) => this.toRow(entry, i));
     this.dataSource.data = rows;
 
     this.availableMethods.set([...new Set(rows.map(r => r.method))].sort());
@@ -93,6 +100,11 @@ export class RequestTableComponent implements OnInit {
         }
       };
     });
+  }
+
+  selectRow(row: TableRow) {
+    this.selectedIndex = row.index;
+    this.entrySelected.emit(this.allEntries[row.index - 1]);
   }
 
   applyFilters() {

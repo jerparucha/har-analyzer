@@ -117,7 +117,10 @@
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="data-row"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+          class="data-row"
+          [class.row-selected]="row.index === selectedIndex"
+          (click)="selectRow(row)"></tr>
 
       <tr class="mat-row" *matNoDataRow>
         <td class="mat-cell no-data" [attr.colspan]="displayedColumns.length">
