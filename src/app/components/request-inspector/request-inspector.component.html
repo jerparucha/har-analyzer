@@ -83,10 +83,32 @@
         @if (requestBody()) {
           <h4 class="section-label">Request Body</h4>
           <pre class="body-pre">{{ requestBody() }}</pre>
+          @if (requestBodyTruncated()) {
+            <div class="truncation-notice">
+              <mat-icon>info_outline</mat-icon>
+              <span>Showing first 50,000 characters.</span>
+              @if (!showFullRequest()) {
+                <button mat-button color="primary" (click)="showFullRequest.set(true)">Show full body</button>
+              } @else {
+                <button mat-button (click)="showFullRequest.set(false)">Collapse</button>
+              }
+            </div>
+          }
         }
         @if (responseBody()) {
           <h4 class="section-label">Response Body</h4>
           <pre class="body-pre">{{ responseBody() }}</pre>
+          @if (responseBodyTruncated()) {
+            <div class="truncation-notice">
+              <mat-icon>info_outline</mat-icon>
+              <span>Showing first 50,000 characters.</span>
+              @if (!showFullResponse()) {
+                <button mat-button color="primary" (click)="showFullResponse.set(true)">Show full body</button>
+              } @else {
+                <button mat-button (click)="showFullResponse.set(false)">Collapse</button>
+              }
+            </div>
+          }
         }
         @if (!requestBody() && !responseBody()) {
           <p class="empty-msg">No body content available.</p>
