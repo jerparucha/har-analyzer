@@ -17,20 +17,78 @@
       }
     </div>
 
-    <div class="breakdown-section">
+    <div class="charts-section">
       <h3 class="section-title">By Content Type</h3>
-      <div class="breakdown-grid">
-        @for (item of breakdown(); track item.label) {
-          <div class="breakdown-item">
-            <div class="breakdown-bar-wrap">
-              <div class="breakdown-dot" [style.background]="item.color"></div>
-              <span class="breakdown-label">{{ item.label }}</span>
-            </div>
-            <span class="breakdown-count">{{ item.count }} req</span>
-            <span class="breakdown-size">{{ formatBytes(item.size) }}</span>
+      <div class="charts-body">
+
+        <!-- Donut charts -->
+        <div class="donuts">
+
+          <!-- Requests donut -->
+          <div class="donut-wrap">
+            <div class="donut-label">Requests</div>
+            <svg viewBox="0 0 180 180" class="donut-svg">
+              <circle cx="90" cy="90" r="60" fill="none" stroke="#eeeeee" stroke-width="24"/>
+              <g transform="rotate(-90, 90, 90)">
+                @for (seg of chartByCount(); track seg.label) {
+                  <circle cx="90" cy="90" r="60" fill="none"
+                    [attr.stroke]="seg.color"
+                    stroke-width="24"
+                    [attr.stroke-dasharray]="seg.dash + ' ' + circ"
+                    [attr.stroke-dashoffset]="seg.offset">
+                    <title>{{ seg.label }}: {{ seg.formattedValue }} ({{ formatPct(seg.pct) }})</title>
+                  </circle>
+                }
+              </g>
+              <text x="90" y="85" text-anchor="middle" class="donut-center-val">{{ totalCountLabel() }}</text>
+              <text x="90" y="101" text-anchor="middle" class="donut-center-sub">requests</text>
+            </svg>
           </div>
-        }
+
+          <!-- Size donut -->
+          <div class="donut-wrap">
+            <div class="donut-label">Transfer Size</div>
+            <svg viewBox="0 0 180 180" class="donut-svg">
+              <circle cx="90" cy="90" r="60" fill="none" stroke="#eeeeee" stroke-width="24"/>
+              <g transform="rotate(-90, 90, 90)">
+                @for (seg of chartBySize(); track seg.label) {
+                  <circle cx="90" cy="90" r="60" fill="none"
+                    [attr.stroke]="seg.color"
+                    stroke-width="24"
+                    [attr.stroke-dasharray]="seg.dash + ' ' + circ"
+                    [attr.stroke-dashoffset]="seg.offset">
+                    <title>{{ seg.label }}: {{ seg.formattedValue }} ({{ formatPct(seg.pct) }})</title>
+                  </circle>
+                }
+              </g>
+              <text x="90" y="85" text-anchor="middle" class="donut-center-val">{{ totalSizeLabel() }}</text>
+              <text x="90" y="101" text-anchor="middle" class="donut-center-sub">total</text>
+            </svg>
+          </div>
+
+        </div>
+
+        <!-- Breakdown list with progress bars -->
+        <div class="breakdown-list">
+          @for (item of breakdown(); track item.label) {
+            <div class="breakdown-item"
+                 [matTooltip]="item.label + ': ' + item.count + ' req · ' + formatBytes(item.size)"
+                 matTooltipShowDelay="300">
+              <span class="breakdown-dot" [style.background]="item.color"></span>
+              <span class="breakdown-label">{{ item.label }}</span>
+              <div class="breakdown-bar-track">
+                <div class="breakdown-bar-fill"
+                     [style.width.%]="item.countPct"
+                     [style.background]="item.color"></div>
+              </div>
+              <span class="breakdown-count">{{ item.count }} req</span>
+              <span class="breakdown-size">{{ formatBytes(item.size) }}</span>
+            </div>
+          }
+        </div>
+
       </div>
     </div>
+
   </div>
 }
