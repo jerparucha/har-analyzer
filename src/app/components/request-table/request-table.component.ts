@@ -50,6 +50,7 @@ export class RequestTableComponent implements OnInit {
   @Output() entrySelected = new EventEmitter<HarEntry>();
 
   selectedIndex: number | null = null;
+  medianTime = 0;
 
   displayedColumns = ['index', 'method', 'status', 'type', 'domain', 'url', 'size', 'time'];
 
@@ -93,6 +94,12 @@ export class RequestTableComponent implements OnInit {
 
     this.availableMethods.set([...new Set(rows.map(r => r.method))].sort());
     this.availableTypes.set([...new Set(rows.map(r => r.type))].sort());
+
+    const sorted = [...rows].sort((a, b) => a.time - b.time);
+    const mid = Math.floor(sorted.length / 2);
+    this.medianTime = sorted.length % 2 !== 0
+      ? sorted[mid].time
+      : (sorted[mid - 1].time + sorted[mid].time) / 2;
 
     this.dataSource.filterPredicate = this.buildFilterPredicate();
 
