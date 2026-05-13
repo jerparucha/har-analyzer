@@ -7,6 +7,11 @@
       <span class="method-badge method-{{ overview()!.method.toLowerCase() }}">{{ overview()!.method }}</span>
       <span class="status-badge {{ statusClass(overview()!.status) }}">{{ overview()!.status }} {{ overview()!.statusText }}</span>
     </div>
+    <button mat-icon-button
+            [matTooltip]="curlCopied() ? 'Copied!' : 'Copy as cURL'"
+            (click)="copyCurl()">
+      <mat-icon>{{ curlCopied() ? 'check' : 'terminal' }}</mat-icon>
+    </button>
     <button mat-icon-button class="close-btn" matTooltip="Close" (click)="closed.emit()">
       <mat-icon>close</mat-icon>
     </button>

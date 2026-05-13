@@ -30,6 +30,7 @@ export class RequestInspectorComponent {
   private readonly MAX_BODY_CHARS = 50_000;
   showFullResponse = signal(false);
   showFullRequest  = signal(false);
+  curlCopied = signal(false);
 
   overview = computed(() => {
     const e = this._entry();
@@ -148,4 +149,30 @@ export class RequestInspectorComponent {
   }
 
   trackByName(_: number, item: HarHeader | HarCookie) { return item.name; }
+
+  copyCurl() {
+    const e = this._entry();
+    if (!e) return;
+
+    const q = (s: string) => `'${s.replace(/'/g, `'\\''`)}'`;
+    const lines: string[] = [`curl -X ${e.request.method} ${q(e.request.url)}`];
+
+    for (const h of e.request.headers) {
+      lines.push(`  -H ${q(`${h.name}: ${h.value}`)}`);
+    }
+
+    const pd = e.request.postData;
+    if (pd?.text) {
+      lines.push(`  --data-raw ${q(pd.text)}`);
+    } else if (pd?.params?.length) {
+      const encoded = pd.params.map(p => `${encodeURIComponent(p.name)}=${encodeURIComponent(p.value ?? '')}`).join('&');
+      lines.push(`  --data-urlencode ${q(encoded)}`);
+    }
+
+    const curl = lines.join(' \\\n');
+    navigator.clipboard.writeText(curl).then(() => {
+      this.curlCopied.set(true);
+      setTimeout(() => this.curlCopied.set(false), 2000);
+    });
+  }
 }
