@@ -8,6 +8,15 @@
         {{ entry.label }}
       </span>
     }
+    <span class="legend-divider"></span>
+    <span class="legend-item">
+      <span class="legend-indicator legend-indicator--failed"></span>
+      Failed (4xx/5xx)
+    </span>
+    <span class="legend-item">
+      <span class="legend-indicator legend-indicator--slow"></span>
+      Slow (&gt;2× median)
+    </span>
   </div>
 
   <!-- Chart -->
@@ -22,7 +31,10 @@
     <!-- Rows -->
     <div class="rows-container">
       @for (row of rows(); track row.index) {
-        <div class="wf-row" [style.height.px]="rowHeight()">
+        <div class="wf-row"
+             [style.height.px]="rowHeight()"
+             [class.wf-row--failed]="row.status >= 400"
+             [class.wf-row--slow]="medianMs() > 0 && row.totalMs > medianMs() * 2">
 
           <!-- Label -->
           <div class="row-label" [style.width.px]="labelWidth"
