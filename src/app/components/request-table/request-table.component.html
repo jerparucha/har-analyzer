@@ -131,6 +131,8 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"
           class="data-row"
           [class.row-selected]="row.index === selectedIndex"
+          [class.row-failed]="row.status >= 400"
+          [class.row-slow]="medianTime > 0 && row.time > medianTime * 2"
           (click)="selectRow(row)"></tr>
 
       <tr class="mat-row" *matNoDataRow>

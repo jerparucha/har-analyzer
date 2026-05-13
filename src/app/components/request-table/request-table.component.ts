@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ViewChild, Output, EventEmitter, computed, signal } from '@angular/core';
+import { Component, inject, OnInit, OnChanges, SimpleChanges, ViewChild, Input, Output, EventEmitter, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
@@ -42,14 +42,17 @@ interface TableRow {
   templateUrl: './request-table.component.html',
   styleUrl: './request-table.component.scss',
 })
-export class RequestTableComponent implements OnInit {
+export class RequestTableComponent implements OnInit, OnChanges {
   private parser = inject(HarParserService);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @Output() entrySelected = new EventEmitter<HarEntry>();
 
+  @Input() domainFilter = '';
+
   selectedIndex: number | null = null;
+  medianTime = 0;
 
   displayedColumns = ['index', 'method', 'status', 'type', 'domain', 'url', 'size', 'time'];
 
@@ -79,6 +82,13 @@ export class RequestTableComponent implements OnInit {
     (this.searchQuery.trim() ? 1 : 0)
   );
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['domainFilter'] && this.dataSource.data.length) {
+      this.searchQuery = this.domainFilter;
+      this.applyFilters();
+    }
+  }
+
   private searchDebounce: ReturnType<typeof setTimeout> | null = null;
 
   onSearchChange() {
@@ -93,6 +103,12 @@ export class RequestTableComponent implements OnInit {
 
     this.availableMethods.set([...new Set(rows.map(r => r.method))].sort());
     this.availableTypes.set([...new Set(rows.map(r => r.type))].sort());
+
+    const sorted = [...rows].sort((a, b) => a.time - b.time);
+    const mid = Math.floor(sorted.length / 2);
+    this.medianTime = sorted.length % 2 !== 0
+      ? sorted[mid].time
+      : (sorted[mid - 1].time + sorted[mid].time) / 2;
 
     this.dataSource.filterPredicate = this.buildFilterPredicate();
 

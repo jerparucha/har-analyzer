@@ -56,6 +56,16 @@ export class WaterfallComponent {
     color,
   }));
 
+  medianMs = computed(() => {
+    const entries = this.parser.entries();
+    if (!entries.length) return 0;
+    const sorted = [...entries].sort((a, b) => a.time - b.time);
+    const mid = Math.floor(sorted.length / 2);
+    return sorted.length % 2 !== 0
+      ? sorted[mid].time
+      : (sorted[mid - 1].time + sorted[mid].time) / 2;
+  });
+
   rows = computed<WaterfallRow[]>(() => {
     const entries = this.parser.entries();
     if (!entries.length) return [];

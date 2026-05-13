@@ -17,6 +17,80 @@
       }
     </div>
 
+    @if (healthMetrics()) {
+    <div class="health-section">
+      <h3 class="section-title">API Health</h3>
+      <div class="health-grid">
+        <div class="health-item">
+          <span class="health-label">Avg Latency</span>
+          <span class="health-value">{{ healthMetrics()!.avg }}</span>
+        </div>
+        <div class="health-item">
+          <span class="health-label">p95 Latency</span>
+          <span class="health-value">{{ healthMetrics()!.p95 }}</span>
+        </div>
+        <div class="health-item">
+          <span class="health-label">Error Rate</span>
+          <span class="health-value" [class.health-value--danger]="healthMetrics()!.errorRateHigh">
+            {{ healthMetrics()!.errorRate }}
+          </span>
+        </div>
+        <div class="health-item">
+          <span class="health-label">Top Error</span>
+          <span class="health-value health-value--mono">{{ healthMetrics()!.topError }}</span>
+        </div>
+        <div class="health-item health-item--wide">
+          <span class="health-label">Slowest Endpoint</span>
+          <span class="health-value health-value--mono">{{ healthMetrics()!.slowestPath }}</span>
+        </div>
+      </div>
+    </div>
+    }
+
+    @if (thirdPartyData()) {
+    <div class="domain-section">
+      <h3 class="section-title">Dependencies by Domain</h3>
+      <table class="domain-table">
+        <thead>
+          <tr>
+            <th>Domain</th>
+            <th class="num-col">Requests</th>
+            <th class="num-col">Avg Time</th>
+            <th class="num-col">Total Size</th>
+            <th class="num-col">Load %</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of thirdPartyData()!; track row.domain) {
+            <tr [class.first-party]="row.isFirstParty"
+                [class.third-party]="!row.isFirstParty"
+                (click)="domainSelected.emit(row.domain)"
+                matTooltip="Filter requests to {{ row.domain }}"
+                matTooltipShowDelay="500">
+              <td class="domain-cell">
+                @if (row.isFirstParty) {
+                  <span class="party-badge party-badge--first">1st</span>
+                } @else {
+                  <span class="party-badge party-badge--third">3rd</span>
+                }
+                {{ row.domain }}
+              </td>
+              <td class="num-col">{{ row.count }}</td>
+              <td class="num-col">{{ formatTime(row.avgTime) }}</td>
+              <td class="num-col">{{ formatBytes(row.totalSize) }}</td>
+              <td class="num-col">
+                <div class="pct-bar-wrap">
+                  <div class="pct-bar" [style.width.%]="row.timePct"></div>
+                  <span>{{ row.timePct.toFixed(1) }}%</span>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    }
+
     <div class="charts-section">
       <h3 class="section-title">By Content Type</h3>
       <div class="charts-body">

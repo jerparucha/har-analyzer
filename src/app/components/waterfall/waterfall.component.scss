@@ -32,6 +32,23 @@
   flex-shrink: 0;
 }
 
+.legend-divider {
+  width: 1px;
+  height: 16px;
+  background: #e0e0e0;
+  flex-shrink: 0;
+}
+
+.legend-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  flex-shrink: 0;
+
+  &--failed { background: rgba(244, 67, 54, 0.25); border: 2px solid #f44336; }
+  &--slow   { background: rgba(255, 152, 0, 0.25); border: 2px solid #ff9800; }
+}
+
 // Chart scroll area
 .chart-scroll {
   overflow-x: auto;
@@ -78,6 +95,10 @@
 
   &:hover { background: #f9f9ff; }
   &:last-child { border-bottom: none; }
+
+  &--failed { background: rgba(244, 67, 54, 0.05); }
+  &--slow   { background: rgba(255, 152, 0, 0.07); }
+  &--failed.wf-row--slow { background: rgba(244, 67, 54, 0.05); }
 }
 
 // Label column
