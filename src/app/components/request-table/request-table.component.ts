@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ViewChild, Output, EventEmitter, computed, signal } from '@angular/core';
+import { Component, inject, OnInit, OnChanges, SimpleChanges, ViewChild, Input, Output, EventEmitter, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
@@ -42,12 +42,14 @@ interface TableRow {
   templateUrl: './request-table.component.html',
   styleUrl: './request-table.component.scss',
 })
-export class RequestTableComponent implements OnInit {
+export class RequestTableComponent implements OnInit, OnChanges {
   private parser = inject(HarParserService);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @Output() entrySelected = new EventEmitter<HarEntry>();
+
+  @Input() domainFilter = '';
 
   selectedIndex: number | null = null;
   medianTime = 0;
@@ -79,6 +81,13 @@ export class RequestTableComponent implements OnInit {
     (this.selectedTypes.length > 0 ? 1 : 0) +
     (this.searchQuery.trim() ? 1 : 0)
   );
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['domainFilter'] && this.dataSource.data.length) {
+      this.searchQuery = this.domainFilter;
+      this.applyFilters();
+    }
+  }
 
   private searchDebounce: ReturnType<typeof setTimeout> | null = null;
 

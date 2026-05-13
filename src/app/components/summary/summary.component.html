@@ -47,6 +47,50 @@
     </div>
     }
 
+    @if (thirdPartyData()) {
+    <div class="domain-section">
+      <h3 class="section-title">Dependencies by Domain</h3>
+      <table class="domain-table">
+        <thead>
+          <tr>
+            <th>Domain</th>
+            <th class="num-col">Requests</th>
+            <th class="num-col">Avg Time</th>
+            <th class="num-col">Total Size</th>
+            <th class="num-col">Load %</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of thirdPartyData()!; track row.domain) {
+            <tr [class.first-party]="row.isFirstParty"
+                [class.third-party]="!row.isFirstParty"
+                (click)="domainSelected.emit(row.domain)"
+                matTooltip="Filter requests to {{ row.domain }}"
+                matTooltipShowDelay="500">
+              <td class="domain-cell">
+                @if (row.isFirstParty) {
+                  <span class="party-badge party-badge--first">1st</span>
+                } @else {
+                  <span class="party-badge party-badge--third">3rd</span>
+                }
+                {{ row.domain }}
+              </td>
+              <td class="num-col">{{ row.count }}</td>
+              <td class="num-col">{{ formatTime(row.avgTime) }}</td>
+              <td class="num-col">{{ formatBytes(row.totalSize) }}</td>
+              <td class="num-col">
+                <div class="pct-bar-wrap">
+                  <div class="pct-bar" [style.width.%]="row.timePct"></div>
+                  <span>{{ row.timePct.toFixed(1) }}%</span>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    }
+
     <div class="charts-section">
       <h3 class="section-title">By Content Type</h3>
       <div class="charts-body">
