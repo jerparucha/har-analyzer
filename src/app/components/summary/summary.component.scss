@@ -61,6 +61,64 @@
   letter-spacing: 0.5px;
 }
 
+// API Health section
+.health-section {
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  padding: 16px 20px;
+}
+
+.health-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+}
+
+.health-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 20px 10px 0;
+  min-width: 140px;
+  flex: 1;
+  border-right: 1px solid #f0f0f0;
+
+  &:last-child { border-right: none; }
+
+  &--wide {
+    flex-basis: 100%;
+    border-right: none;
+    border-top: 1px solid #f0f0f0;
+    padding: 10px 0 0;
+    margin-top: 4px;
+  }
+}
+
+.health-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #9e9e9e;
+}
+
+.health-value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #212121;
+
+  &--danger { color: #f44336; }
+
+  &--mono {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.82rem;
+    font-weight: 400;
+    color: #333;
+    word-break: break-all;
+  }
+}
+
 // Charts section
 .charts-section {
   background: #fff;
