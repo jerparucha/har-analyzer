@@ -59,6 +59,20 @@
     </div>
   </div>
 
+  <!-- Time range filter -->
+  @if (totalSpanMs > 0) {
+    <div class="range-bar">
+      <span class="range-label">Time range</span>
+      <mat-slider class="range-slider" [min]="0" [max]="totalSpanMs" [step]="sliderStep">
+        <input matSliderStartThumb [value]="rangeStartMs()"
+               (valueChange)="rangeStartMs.set($event); applyFilters()">
+        <input matSliderEndThumb [value]="rangeEndMs()"
+               (valueChange)="rangeEndMs.set($event); applyFilters()">
+      </mat-slider>
+      <span class="range-values">{{ formatTime(rangeStartMs()) }} – {{ formatTime(rangeEndMs()) }}</span>
+    </div>
+  }
+
   <div class="result-count">
     {{ dataSource.filteredData.length }} of {{ dataSource.data.length }} requests
   </div>
