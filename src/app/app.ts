@@ -12,6 +12,7 @@ import { RequestInspectorComponent } from './components/request-inspector/reques
 import { WaterfallComponent } from './components/waterfall/waterfall.component';
 import { PerformanceComponent } from './components/performance/performance.component';
 import { SecurityComponent } from './components/security/security.component';
+import { AnalysisComponent } from './components/analysis/analysis.component';
 import { HarParserService } from './services/har-parser.service';
 import { HarEntry } from './models/har.model';
 
@@ -32,6 +33,7 @@ import { HarEntry } from './models/har.model';
     WaterfallComponent,
     PerformanceComponent,
     SecurityComponent,
+    AnalysisComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss',
@@ -45,6 +47,11 @@ export class App {
 
   onDomainSelected(domain: string) {
     this.domainFilter.set(domain);
+    this.activeTab.set(4); // Requests tab
+  }
+
+  onAnalysisFilter(query: string) {
+    this.domainFilter.set(query);
     this.activeTab.set(4); // Requests tab
   }
 
