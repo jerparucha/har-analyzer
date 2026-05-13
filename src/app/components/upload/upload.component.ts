@@ -49,7 +49,7 @@ export class UploadComponent {
   }
 
   private async processFile(file: File) {
-    if (!file.name.endsWith('.har') && file.type !== 'application/json') {
+    if (!file.name.endsWith('.har')) {
       this.parser.error.set('Please select a valid .har file');
       return;
     }

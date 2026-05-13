@@ -12,6 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatSliderModule } from '@angular/material/slider';
 import { HarParserService } from '../../services/har-parser.service';
 import { HarEntry } from '../../models/har.model';
 
@@ -27,6 +28,7 @@ interface TableRow {
   size: number;
   time: number;
   startedAt: string;
+  startMs: number;
 }
 
 @Component({
@@ -37,7 +39,7 @@ interface TableRow {
     MatTableModule, MatPaginatorModule, MatSortModule,
     MatInputModule, MatFormFieldModule, MatSelectModule,
     MatIconModule, MatButtonModule, MatChipsModule,
-    MatTooltipModule, MatBadgeModule,
+    MatTooltipModule, MatBadgeModule, MatSliderModule,
   ],
   templateUrl: './request-table.component.html',
   styleUrl: './request-table.component.scss',
@@ -53,6 +55,11 @@ export class RequestTableComponent implements OnInit, OnChanges {
 
   selectedIndex: number | null = null;
   medianTime = 0;
+  private t0 = 0;
+  totalSpanMs = 0;
+  sliderStep = 100;
+  rangeStartMs = signal(0);
+  rangeEndMs   = signal(0);
 
   displayedColumns = ['index', 'method', 'status', 'type', 'domain', 'url', 'size', 'time'];
 
@@ -79,7 +86,8 @@ export class RequestTableComponent implements OnInit, OnChanges {
     (this.selectedMethods.length > 0 ? 1 : 0) +
     (this.selectedStatuses.length > 0 ? 1 : 0) +
     (this.selectedTypes.length > 0 ? 1 : 0) +
-    (this.searchQuery.trim() ? 1 : 0)
+    (this.searchQuery.trim() ? 1 : 0) +
+    (this.rangeStartMs() > 0 || this.rangeEndMs() < this.totalSpanMs ? 1 : 0)
   );
 
   ngOnChanges(changes: SimpleChanges) {
@@ -98,6 +106,14 @@ export class RequestTableComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.allEntries = this.parser.entries();
+    this.t0 = this.allEntries.length ? new Date(this.allEntries[0].startedDateTime).getTime() : 0;
+    this.totalSpanMs = this.allEntries.reduce((max, e) => {
+      const end = new Date(e.startedDateTime).getTime() - this.t0 + e.time;
+      return end > max ? end : max;
+    }, 0);
+    this.sliderStep = Math.max(50, Math.floor(this.totalSpanMs / 500));
+    this.rangeEndMs.set(Math.ceil(this.totalSpanMs));
+
     const rows = this.allEntries.map((entry, i) => this.toRow(entry, i));
     this.dataSource.data = rows;
 
@@ -136,6 +152,8 @@ export class RequestTableComponent implements OnInit, OnChanges {
       methods: this.selectedMethods,
       statuses: this.selectedStatuses,
       types: this.selectedTypes,
+      rangeStart: this.rangeStartMs(),
+      rangeEnd: this.rangeEndMs(),
     });
     this.dataSource.filter = filter;
     this.dataSource.paginator?.firstPage();
@@ -146,6 +164,8 @@ export class RequestTableComponent implements OnInit, OnChanges {
     this.selectedMethods = [];
     this.selectedStatuses = [];
     this.selectedTypes = [];
+    this.rangeStartMs.set(0);
+    this.rangeEndMs.set(Math.ceil(this.totalSpanMs));
     this.applyFilters();
   }
 
@@ -204,6 +224,7 @@ export class RequestTableComponent implements OnInit, OnChanges {
       size: entry.response.content.size > 0 ? entry.response.content.size : entry.response.bodySize,
       time: entry.time,
       startedAt: entry.startedDateTime,
+      startMs: new Date(entry.startedDateTime).getTime() - this.t0,
     };
   }
 
@@ -260,6 +281,7 @@ export class RequestTableComponent implements OnInit, OnChanges {
         });
         if (!match) return false;
       }
+      if (row.startMs < f.rangeStart || row.startMs > f.rangeEnd) return false;
       return true;
     };
   }

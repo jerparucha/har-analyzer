@@ -1,0 +1,146 @@
+<div class="analysis-wrapper">
+
+  <!-- Failed Clusters -->
+  <div class="analysis-section">
+    <h3 class="section-title">
+      <mat-icon>error_outline</mat-icon>
+      Failed Request Clusters
+    </h3>
+
+    @if (failedClusters().length) {
+      <table class="analysis-table">
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th>Endpoint</th>
+            <th class="num-col">Failures</th>
+            <th>Status Breakdown</th>
+            <th class="action-col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of failedClusters(); track row.path) {
+            <tr>
+              <td><span class="method-badge method-{{ row.method.toLowerCase() }}">{{ row.method }}</span></td>
+              <td class="path-cell">{{ row.path }}</td>
+              <td class="num-col failure-count">{{ row.count }}</td>
+              <td class="breakdown-cell">{{ row.statusBreakdown }}</td>
+              <td class="action-col">
+                <button mat-icon-button
+                        matTooltip="Filter requests to this endpoint"
+                        (click)="filterRequested.emit(row.filterQuery)">
+                  <mat-icon>filter_list</mat-icon>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    } @else {
+      <p class="empty-msg"><mat-icon>check_circle</mat-icon> No failed request clusters detected.</p>
+    }
+  </div>
+
+  <!-- Retry Loops -->
+  <div class="analysis-section">
+    <h3 class="section-title">
+      <mat-icon>loop</mat-icon>
+      Retry Loop Detection
+    </h3>
+
+    @if (retryLoops().length) {
+      <table class="analysis-table">
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th>Endpoint</th>
+            <th class="num-col">Calls</th>
+            <th class="num-col">Time Span</th>
+            <th class="num-col">Avg Interval</th>
+            <th class="action-col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of retryLoops(); track row.path) {
+            <tr>
+              <td><span class="method-badge method-{{ row.method.toLowerCase() }}">{{ row.method }}</span></td>
+              <td class="path-cell">{{ row.path }}</td>
+              <td class="num-col retry-count">{{ row.count }}×</td>
+              <td class="num-col">{{ formatTime(row.spanMs) }}</td>
+              <td class="num-col">{{ formatTime(row.avgIntervalMs) }}</td>
+              <td class="action-col">
+                <button mat-icon-button
+                        matTooltip="Filter requests to this endpoint"
+                        (click)="filterRequested.emit(row.filterQuery)">
+                  <mat-icon>filter_list</mat-icon>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    } @else {
+      <p class="empty-msg"><mat-icon>check_circle</mat-icon> No retry loops detected.</p>
+    }
+  </div>
+
+  <!-- Endpoint Performance -->
+  <div class="analysis-section">
+    <h3 class="section-title">
+      <mat-icon>speed</mat-icon>
+      Endpoint Performance
+    </h3>
+
+    @if (endpointStats().length) {
+      <table class="analysis-table perf-table">
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th class="sortable" (click)="setSort('path')">
+              Endpoint <mat-icon class="sort-icon">{{ sortIcon('path') }}</mat-icon>
+            </th>
+            <th class="num-col sortable" (click)="setSort('count')">
+              Calls <mat-icon class="sort-icon">{{ sortIcon('count') }}</mat-icon>
+            </th>
+            <th class="num-col sortable" (click)="setSort('avgTime')">
+              Avg Time <mat-icon class="sort-icon">{{ sortIcon('avgTime') }}</mat-icon>
+            </th>
+            <th class="num-col sortable" (click)="setSort('p95Time')">
+              p95 <mat-icon class="sort-icon">{{ sortIcon('p95Time') }}</mat-icon>
+            </th>
+            <th class="num-col sortable" (click)="setSort('errorRate')">
+              Error Rate <mat-icon class="sort-icon">{{ sortIcon('errorRate') }}</mat-icon>
+            </th>
+            <th class="action-col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of endpointStats(); track row.path + row.method) {
+            <tr>
+              <td><span class="method-badge method-{{ row.method.toLowerCase() }}">{{ row.method }}</span></td>
+              <td class="path-cell">{{ row.path }}</td>
+              <td class="num-col">{{ row.count }}</td>
+              <td class="num-col">{{ formatTime(row.avgTime) }}</td>
+              <td class="num-col">{{ formatTime(row.p95Time) }}</td>
+              <td class="num-col">
+                <span class="error-rate {{ errorRateClass(row.errorRate) }}">
+                  {{ row.errorRate.toFixed(1) }}%
+                </span>
+              </td>
+              <td class="action-col">
+                <button mat-icon-button
+                        matTooltip="Filter requests to this endpoint"
+                        (click)="filterRequested.emit(row.filterQuery)">
+                  <mat-icon>filter_list</mat-icon>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    } @else {
+      <p class="empty-msg">No data available.</p>
+    }
+  </div>
+
+</div>
