@@ -28,6 +28,9 @@
       <mat-tab label="Security">
         <app-security />
       </mat-tab>
+      <mat-tab label="Analysis">
+        <app-analysis (filterRequested)="onAnalysisFilter($event)" />
+      </mat-tab>
       <mat-tab label="Requests">
         <div class="requests-layout" [class.has-inspector]="selectedEntry">
           <div class="table-pane">
