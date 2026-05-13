@@ -1,0 +1,80 @@
+<svg width="512" height="512" viewBox="0 0 680 680" role="img" xmlns="http://www.w3.org/2000/svg">
+  <title>HAR File Analyzer App Icon</title>
+  <desc>A cute rounded square app icon featuring a magnifying glass over a network activity graph with colorful dots representing HTTP requests</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1e3a5f"/>
+      <stop offset="100%" stop-color="#0f2240"/>
+    </linearGradient>
+    <linearGradient id="glassGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7ec8f4" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#4fa3d8" stop-opacity="0.12"/>
+    </linearGradient>
+    <clipPath id="iconClip">
+      <rect x="60" y="60" width="560" height="560" rx="128"/>
+    </clipPath>
+  </defs>
+
+  <!-- Background -->
+  <rect x="60" y="60" width="560" height="560" rx="128" fill="url(#bg)"/>
+
+  <!-- Subtle grid lines -->
+  <g clip-path="url(#iconClip)" opacity="0.08">
+    <line x1="60" y1="230" x2="620" y2="230" stroke="#7ec8f4" stroke-width="1"/>
+    <line x1="60" y1="340" x2="620" y2="340" stroke="#7ec8f4" stroke-width="1"/>
+    <line x1="60" y1="450" x2="620" y2="450" stroke="#7ec8f4" stroke-width="1"/>
+    <line x1="200" y1="60" x2="200" y2="620" stroke="#7ec8f4" stroke-width="1"/>
+    <line x1="340" y1="60" x2="340" y2="620" stroke="#7ec8f4" stroke-width="1"/>
+    <line x1="480" y1="60" x2="480" y2="620" stroke="#7ec8f4" stroke-width="1"/>
+  </g>
+
+  <!-- Network activity bars -->
+  <g clip-path="url(#iconClip)">
+    <rect x="110" y="160" width="180" height="18" rx="9" fill="#4fa3d8" opacity="0.9"/>
+    <rect x="110" y="196" width="290" height="18" rx="9" fill="#f4a261" opacity="0.9"/>
+    <rect x="110" y="232" width="120" height="18" rx="9" fill="#4ade80" opacity="0.9"/>
+    <rect x="110" y="268" width="340" height="18" rx="9" fill="#c084fc" opacity="0.9"/>
+    <rect x="110" y="304" width="200" height="18" rx="9" fill="#fb7185" opacity="0.9"/>
+    <rect x="110" y="340" width="250" height="18" rx="9" fill="#38bdf8" opacity="0.9"/>
+    <rect x="110" y="376" width="160" height="18" rx="9" fill="#fbbf24" opacity="0.9"/>
+    <rect x="110" y="412" width="310" height="18" rx="9" fill="#4fa3d8" opacity="0.7"/>
+    <rect x="110" y="448" width="100" height="18" rx="9" fill="#4ade80" opacity="0.7"/>
+
+    <circle cx="298" cy="169" r="9" fill="#7ec8f4"/>
+    <circle cx="408" cy="205" r="9" fill="#fcd34d"/>
+    <circle cx="238" cy="241" r="9" fill="#86efac"/>
+    <circle cx="458" cy="277" r="9" fill="#d8b4fe"/>
+    <circle cx="318" cy="313" r="9" fill="#fda4af"/>
+    <circle cx="368" cy="349" r="9" fill="#7dd3fc"/>
+    <circle cx="278" cy="385" r="9" fill="#fde68a"/>
+  </g>
+
+  <!-- Magnifying glass -->
+  <circle cx="410" cy="390" r="140" fill="url(#glassGrad)" stroke="#a8d8f0" stroke-width="6" opacity="0.95"/>
+  <circle cx="410" cy="390" r="140" fill="none" stroke="white" stroke-width="2.5" opacity="0.18"/>
+  <line x1="518" y1="498" x2="572" y2="558" stroke="#a8d8f0" stroke-width="22" stroke-linecap="round"/>
+  <line x1="518" y1="498" x2="572" y2="558" stroke="white" stroke-width="8" stroke-linecap="round" opacity="0.25"/>
+
+  <!-- Mini chart inside the magnifier glass -->
+  <g clip-path="url(#iconClip)">
+    <polyline points="310,430 345,400 380,415 415,375 450,355 490,340" fill="none" stroke="#7ec8f4" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+    <circle cx="310" cy="430" r="7" fill="#38bdf8"/>
+    <circle cx="345" cy="400" r="7" fill="#4ade80"/>
+    <circle cx="380" cy="415" r="7" fill="#fbbf24"/>
+    <circle cx="415" cy="375" r="7" fill="#c084fc"/>
+    <circle cx="450" cy="355" r="7" fill="#fb7185"/>
+    <circle cx="490" cy="340" r="7" fill="#7ec8f4"/>
+  </g>
+
+  <!-- Sparkle accents -->
+  <g opacity="0.7">
+    <circle cx="148" cy="120" r="6" fill="#fbbf24"/>
+    <circle cx="540" cy="148" r="4" fill="#4ade80"/>
+    <circle cx="560" cy="540" r="5" fill="#c084fc"/>
+    <circle cx="120" cy="530" r="4" fill="#38bdf8"/>
+  </g>
+
+  <!-- HAR label -->
+  <rect x="215" y="530" width="250" height="52" rx="16" fill="white" opacity="0.12"/>
+  <text x="340" y="563" text-anchor="middle" font-family="system-ui, sans-serif" font-size="26" font-weight="700" fill="white" letter-spacing="4" opacity="0.95">HAR</text>
+</svg>

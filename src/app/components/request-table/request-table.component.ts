@@ -79,6 +79,13 @@ export class RequestTableComponent implements OnInit {
     (this.searchQuery.trim() ? 1 : 0)
   );
 
+  private searchDebounce: ReturnType<typeof setTimeout> | null = null;
+
+  onSearchChange() {
+    if (this.searchDebounce) clearTimeout(this.searchDebounce);
+    this.searchDebounce = setTimeout(() => this.applyFilters(), 300);
+  }
+
   ngOnInit() {
     this.allEntries = this.parser.entries();
     const rows = this.allEntries.map((entry, i) => this.toRow(entry, i));
@@ -182,6 +189,46 @@ export class RequestTableComponent implements OnInit {
       time: entry.time,
       startedAt: entry.startedDateTime,
     };
+  }
+
+  exportCsv() {
+    const rows = this.dataSource.filteredData;
+    const header = ['#', 'Method', 'URL', 'Domain', 'Status', 'Status Text', 'Type', 'Size (bytes)', 'Time (ms)', 'Started At'];
+    const escape = (v: string | number) => {
+      const s = String(v);
+      return s.includes(',') || s.includes('"') || s.includes('\n') ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const lines = [
+      header.join(','),
+      ...rows.map(r => [r.index, r.method, r.url, r.domain, r.status, r.statusText, r.type, r.size, r.time, r.startedAt].map(escape).join(',')),
+    ];
+    this.download(lines.join('\r\n'), 'har-export.csv', 'text/csv');
+  }
+
+  exportJson() {
+    const rows = this.dataSource.filteredData.map(r => ({
+      index: r.index,
+      method: r.method,
+      url: r.url,
+      domain: r.domain,
+      status: r.status,
+      statusText: r.statusText,
+      type: r.type,
+      sizeBytes: r.size,
+      timeMs: r.time,
+      startedAt: r.startedAt,
+    }));
+    this.download(JSON.stringify(rows, null, 2), 'har-export.json', 'application/json');
+  }
+
+  private download(content: string, filename: string, mimeType: string) {
+    const blob = new Blob([content], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
   }
 
   private buildFilterPredicate() {

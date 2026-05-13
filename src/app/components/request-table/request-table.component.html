@@ -5,7 +5,7 @@
     <mat-form-field appearance="outline" class="search-field">
       <mat-label>Search URL or domain</mat-label>
       <mat-icon matPrefix>search</mat-icon>
-      <input matInput [(ngModel)]="searchQuery" (ngModelChange)="applyFilters()" placeholder="e.g. api/users" />
+      <input matInput [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()" placeholder="e.g. api/users" />
       @if (searchQuery) {
         <button matSuffix mat-icon-button (click)="searchQuery=''; applyFilters()">
           <mat-icon>close</mat-icon>
@@ -46,6 +46,17 @@
         Clear ({{ activeFilterCount() }})
       </button>
     }
+
+    <div class="export-btns">
+      <button mat-stroked-button (click)="exportCsv()" matTooltip="Export filtered results as CSV">
+        <mat-icon>download</mat-icon>
+        CSV
+      </button>
+      <button mat-stroked-button (click)="exportJson()" matTooltip="Export filtered results as JSON">
+        <mat-icon>download</mat-icon>
+        JSON
+      </button>
+    </div>
   </div>
 
   <div class="result-count">

@@ -122,9 +122,25 @@
   overflow-x: auto;
   white-space: pre-wrap;
   word-break: break-all;
-  margin: 0 0 12px;
+  margin: 0 0 4px;
   max-height: 400px;
   overflow-y: auto;
+}
+
+.truncation-notice {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: #757575;
+  margin-bottom: 12px;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    color: #ff9800;
+  }
 }
 
 .empty-msg {
