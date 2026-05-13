@@ -30,6 +30,34 @@
   }
 }
 
+.range-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 2px;
+}
+
+.range-label {
+  font-size: 0.78rem;
+  color: #757575;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.range-slider {
+  flex: 1;
+}
+
+.range-values {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: #333;
+  white-space: nowrap;
+  min-width: 130px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
 .result-count {
   font-size: 0.82rem;
   color: #757575;
