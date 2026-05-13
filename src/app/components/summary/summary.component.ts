@@ -94,6 +94,56 @@ export class SummaryComponent {
     return this.formatBytes(this.baseBreakdown().reduce((s, i) => s + i.size, 0));
   });
 
+  healthMetrics = computed(() => {
+    const entries = this.parser.entries();
+    if (!entries.length) return null;
+
+    const times = entries.map(e => e.time);
+    const avg = times.reduce((a, b) => a + b, 0) / times.length;
+
+    const sortedTimes = [...times].sort((a, b) => a - b);
+    const p95 = sortedTimes[Math.floor(sortedTimes.length * 0.95)];
+
+    const failed = entries.filter(e => e.response.status >= 400);
+    const errorRate = (failed.length / entries.length) * 100;
+
+    const pathTimes = new Map<string, number[]>();
+    for (const e of entries) {
+      try {
+        const path = new URL(e.request.url).pathname;
+        const bucket = pathTimes.get(path) ?? [];
+        bucket.push(e.time);
+        pathTimes.set(path, bucket);
+      } catch { /* skip */ }
+    }
+    let slowestPath = '—';
+    let slowestAvg = 0;
+    for (const [path, t] of pathTimes) {
+      const a = t.reduce((s, v) => s + v, 0) / t.length;
+      if (a > slowestAvg) { slowestAvg = a; slowestPath = path; }
+    }
+
+    let topError = '—';
+    if (failed.length) {
+      const counts = new Map<string, number>();
+      for (const e of failed) {
+        const key = `${e.response.status} ${e.response.statusText}`;
+        counts.set(key, (counts.get(key) ?? 0) + 1);
+      }
+      const [code, count] = [...counts.entries()].sort((a, b) => b[1] - a[1])[0];
+      topError = `${code} (${count}×)`;
+    }
+
+    return {
+      avg: this.formatTime(avg),
+      p95: this.formatTime(p95),
+      errorRate: `${errorRate.toFixed(1)}%`,
+      errorRateHigh: errorRate >= 5,
+      slowestPath,
+      topError,
+    };
+  });
+
   private toSegments(
     items: BreakdownItem[],
     total: number,

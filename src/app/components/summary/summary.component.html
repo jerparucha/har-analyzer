@@ -17,6 +17,36 @@
       }
     </div>
 
+    @if (healthMetrics()) {
+    <div class="health-section">
+      <h3 class="section-title">API Health</h3>
+      <div class="health-grid">
+        <div class="health-item">
+          <span class="health-label">Avg Latency</span>
+          <span class="health-value">{{ healthMetrics()!.avg }}</span>
+        </div>
+        <div class="health-item">
+          <span class="health-label">p95 Latency</span>
+          <span class="health-value">{{ healthMetrics()!.p95 }}</span>
+        </div>
+        <div class="health-item">
+          <span class="health-label">Error Rate</span>
+          <span class="health-value" [class.health-value--danger]="healthMetrics()!.errorRateHigh">
+            {{ healthMetrics()!.errorRate }}
+          </span>
+        </div>
+        <div class="health-item">
+          <span class="health-label">Top Error</span>
+          <span class="health-value health-value--mono">{{ healthMetrics()!.topError }}</span>
+        </div>
+        <div class="health-item health-item--wide">
+          <span class="health-label">Slowest Endpoint</span>
+          <span class="health-value health-value--mono">{{ healthMetrics()!.slowestPath }}</span>
+        </div>
+      </div>
+    </div>
+    }
+
     <div class="charts-section">
       <h3 class="section-title">By Content Type</h3>
       <div class="charts-body">
