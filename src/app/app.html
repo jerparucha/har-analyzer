@@ -13,9 +13,11 @@
   @if (!hasFile()) {
     <app-upload />
   } @else {
-    <mat-tab-group animationDuration="150ms" class="main-tabs">
+    <mat-tab-group animationDuration="150ms" class="main-tabs"
+                   [selectedIndex]="activeTab()"
+                   (selectedIndexChange)="activeTab.set($event)">
       <mat-tab label="Summary">
-        <app-summary />
+        <app-summary (domainSelected)="onDomainSelected($event)" />
       </mat-tab>
       <mat-tab label="Waterfall">
         <app-waterfall />
@@ -29,7 +31,9 @@
       <mat-tab label="Requests">
         <div class="requests-layout" [class.has-inspector]="selectedEntry">
           <div class="table-pane">
-            <app-request-table (entrySelected)="selectedEntry = $event" />
+            <app-request-table
+              (entrySelected)="selectedEntry = $event"
+              [domainFilter]="domainFilter()" />
           </div>
           @if (selectedEntry) {
             <div class="inspector-pane">

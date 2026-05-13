@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
@@ -40,9 +40,18 @@ export class App {
   private parser = inject(HarParserService);
   hasFile = this.parser.harFile;
   selectedEntry: HarEntry | null = null;
+  activeTab = signal(0);
+  domainFilter = signal('');
+
+  onDomainSelected(domain: string) {
+    this.domainFilter.set(domain);
+    this.activeTab.set(4); // Requests tab
+  }
 
   reset() {
     this.selectedEntry = null;
+    this.domainFilter.set('');
+    this.activeTab.set(0);
     this.parser.reset();
   }
 }

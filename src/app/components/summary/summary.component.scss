@@ -61,6 +61,92 @@
   letter-spacing: 0.5px;
 }
 
+// Domain dependencies section
+.domain-section {
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  padding: 16px 20px;
+}
+
+.domain-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+
+  thead th {
+    text-align: left;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #9e9e9e;
+    padding: 0 8px 10px;
+    border-bottom: 1px solid #f0f0f0;
+    white-space: nowrap;
+  }
+
+  tbody tr {
+    cursor: pointer;
+    border-bottom: 1px solid #f8f8f8;
+    transition: background 0.1s;
+
+    &:last-child { border-bottom: none; }
+    &:hover { background: #f5f5ff; }
+    &.first-party { color: #555; }
+    &.third-party { }
+  }
+
+  td {
+    padding: 7px 8px;
+    vertical-align: middle;
+  }
+}
+
+.domain-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.78rem;
+  color: #1a237e;
+  word-break: break-all;
+}
+
+.party-badge {
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 1px 4px;
+  border-radius: 3px;
+  flex-shrink: 0;
+  font-family: Roboto, sans-serif;
+
+  &--first { background: #e8f5e9; color: #2e7d32; }
+  &--third  { background: #e3f2fd; color: #1565c0; }
+}
+
+.num-col {
+  text-align: right;
+  white-space: nowrap;
+  color: #444;
+}
+
+.pct-bar-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.pct-bar {
+  height: 6px;
+  min-width: 2px;
+  max-width: 60px;
+  background: #3f51b5;
+  border-radius: 3px;
+  opacity: 0.4;
+}
+
 // API Health section
 .health-section {
   background: #fff;
